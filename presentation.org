@@ -28,7 +28,7 @@ endmodule
 *** Modul I/O
 #+BEGIN_SRC verilog
 module test (
-   input in,
+   input  in,
    output out
 );
 
@@ -79,7 +79,7 @@ endmodule
 #+END_SRC
 
 *** Submodul
-**** Modul :BMCOL:B_block:
+**** Modul                                                 :BMCOL:B_block:
 :PROPERTIES:
 :BEAMER_col: 0.4
 :END:
@@ -88,12 +88,12 @@ endmodule
 #+BEGIN_SRC verilog
 // out = (a + b)^2
 module squaredsum (
-  input  [7:0] a,
-  input  [7:0] b,
-  output [8:0] out
+   input  [7:0] a,
+   input  [7:0] b,
+   output [8:0] out
 );
 
-   wire [14:0] sum;
+   wire  [14:0] sum;
 
    sum sum_mod (
       .a   (a),
@@ -110,7 +110,7 @@ module squaredsum (
 endmodule
 #+END_SRC
 
-**** Submodul :BMCOL:B_block:
+**** Submodul                                              :BMCOL:B_block:
 :PROPERTIES:
 :BEAMER_col: 0.4
 :END:
@@ -128,8 +128,8 @@ module sum (
 endmodule
 
 module multiply (
-   input  [7:0] a,
-   input  [7:0] b,
+   input   [7:0] a,
+   input   [7:0] b,
    output [14:0] product
 );
 
@@ -141,9 +141,46 @@ endmodule
 ** Sekvensiell logikk
 *** Sekvensiell logikk
 #+BEGIN_SRC verilog
-module test ();
+module test (
+   output [7:0] out
+);
 
+   // Ikke tillatt
    wire count = count + 1;
+
+   assign out = count;
+
+endmodule
+#+END_SRC
+
+*** Sekvensiell logikk
+[[./images/d_latch.png]]
+
+*** Sekvensiell logikk
+#+BEGIN_SRC verilog
+module test (
+   output [7:0] out
+);
+
+   reg    [7:0] count = 0;
+
+   assign out = count;
+
+endmodule
+#+END_SRC
+
+*** Sekvensiell logikk
+#+BEGIN_SRC verilog
+module test (
+   output [7:0] out
+);
+
+   reg    [7:0] count = 0;
+
+   assign out = count;
+
+   // Ikke tillatt
+   assign count = count + 1;
 
 endmodule
 #+END_SRC
@@ -152,26 +189,12 @@ endmodule
 #+BEGIN_SRC verilog
 module test (
    input        clk,
-   output [7:0] count
+   output [7:0] out
 );
 
-   reg [7:0] count_reg = 0;
+   reg    [7:0] count = 0;
 
-   assign count = reg;
-
-   always @(posedge clk) begin
-      count_reg <= count_reg + 1;
-   end
-
-endmodule
-#+END_SRC
-
-*** Sekvensiell logikk
-#+BEGIN_SRC verilog
-module test (
-   input            clk,
-   output reg [7:0] count
-);
+   assign out = count;
 
    always @(posedge clk) begin
       count <= count + 1;
@@ -183,10 +206,14 @@ endmodule
 *** Sekvensiell logikk reset
 #+BEGIN_SRC verilog
 module test (
-   input            clk,
-   input            rst_n,
-   output reg [7:0] count
+   input        clk,
+   input        rst_n,
+   output [7:0] out
 );
+
+   reg    [7:0] count = 0;
+
+   assign out = count;
 
    always @(posedge clk or negedge rst_n) begin
       if (~rst_n) begin
@@ -208,8 +235,8 @@ module test (
    output [7:0] fib
 );
 
-   reg [7:0] a = 0;
-   reg [7:0] b = 0;
+   reg    [7:0] a = 0;
+   reg    [7:0] b = 0;
 
    assign fib = b;
 
@@ -225,3 +252,130 @@ module test (
 
 endmodule
 #+END_SRC
+
+*** Fibonacci blocking
+#+ATTR_LATEX: :options fontsize=\scriptsize
+#+BEGIN_SRC verilog
+module test (
+   input        clk,
+   input        rst_n,
+   output [7:0] fib
+);
+
+   reg    [7:0] tmp = 0;
+   reg    [7:0] a = 0;
+   reg    [7:0] b = 0;
+
+   assign fib = b;
+
+   always @(posedge clk or negedge rst_n) begin
+      if (~rst_n) begin
+         a <= 0;
+         b <= 0;
+      end else begin
+         tmp = b;
+         b = a + b;
+         a = tmp;
+      end
+   end
+
+endmodule
+#+END_SRC
+
+*** Lengste sti
+[[./images/critical_path.jpg]]
+
+** Klokker
+*** Saktere klokke
+**** Top                                                   :BMCOL:B_block:
+:PROPERTIES:
+:BEAMER_col: 0.5
+:END:
+
+#+ATTR_LATEX: :options fontsize=\scriptsize
+#+BEGIN_SRC verilog
+module top (
+  input        clk,
+  output [7:0] out
+);
+
+   reg   [7:0] ticks = 0;
+   reg         counter_clk = 0;
+
+   counter counter_mod (
+      .clk (counter_clk),
+      .count (out)
+   );
+
+   always @(posedge clk) begin
+      if (ticks == 100) begin
+         ticks <= 0;
+         counter_clk <= ~counter_clk;
+      end else begin
+        ticks <= ticks + 1;
+      end
+   end
+
+endmodule
+#+END_SRC
+
+**** Other                                                 :BMCOL:B_block:
+:PROPERTIES:
+:BEAMER_col: 0.35
+:END:
+
+#+ATTR_LATEX: :options fontsize=\scriptsize
+#+BEGIN_SRC verilog
+module counter (
+   input            clk,
+   output reg [7:0] count
+);
+
+   always @(posedge clk) begin
+      count <= count + 1;
+   end
+
+endmodule
+#+END_SRC
+
+** Oppgave 1
+*** Oppsett
+- Klon repoet
+- Installer iverilog
+- VSCode plugin
+  - Verilog-HDL/SystemVerilog/Bluespec SystemVerilog
+    - Sett Settings->Verilog->Linting->Linter = iverilog
+- Kjør src_sh[:exports code]{sudo ./run.sh task1_led}
+  - Compilerer og flasher til FPGA
+
+*** Oppgave 1
+Få lysene til å blinke i et mønster.
+\bigskip
+
+F.eks.
+- En teller
+- En klokke
+- Et fast mønster
+
+** Oppgave 2
+*** Oppgave 2
+FPGAen har fire seven-segment display. Bruk dette til å vise en teller i base 16.
+\bigskip
+
+Steg:
+- Koble opp displayet og få det til å reagere
+- Vis en teller på ett display
+- Utvid telleren til hele displayet
+\bigskip
+
+Ekstra utfordring: tell i base 10.
+
+*** I/O porter
+Mappingen mellom de fysiske portene på FPGAen og navnene vi bruker i Verilog er definert av filen =cu.pcf=.
+Det er mulig å samle flere porter til en array, uavhengig av deres fysiske plassering.
+\bigskip
+
+- Finn signalet dere vil styre på diagrammet for Alchitry Io
+- Spor signalet tilbake til en pin på B1A
+- Finn tilsvarende pin på diagrammet for Alchitry Cu
+- Spor signalet tilbake til en port på FPGAen
