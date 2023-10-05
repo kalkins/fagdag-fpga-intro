@@ -1,8 +1,8 @@
-module counter
-    (
-        input clk, rst_n,
-        output reg [32:0] count
-    );
+module counter (
+    input             clk,
+    input             rst_n,
+    output reg [32:0] count
+);
 
     always @(posedge clk or negedge rst_n) begin
         if (~rst_n) begin
