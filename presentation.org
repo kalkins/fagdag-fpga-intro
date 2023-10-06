@@ -88,12 +88,12 @@ endmodule
 #+BEGIN_SRC verilog
 // out = (a + b)^2
 module squaredsum (
-   input  [7:0] a,
-   input  [7:0] b,
-   output [8:0] out
+   input   [7:0] a,
+   input   [7:0] b,
+   output [14:0] out
 );
 
-   wire  [14:0] sum;
+   wire   [7:0] sum;
 
    sum sum_mod (
       .a   (a),
@@ -102,9 +102,9 @@ module squaredsum (
    );
 
    multiply square_mod (
-      .a   (sum),
-      .b   (sum),
-      .sum (out)
+      .a       (sum),
+      .b       (sum),
+      .product (out)
    );
 
 endmodule
