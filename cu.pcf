@@ -12,13 +12,13 @@ set_io led[7] N14
 
 set_io seven_segment_select[0] H3 # AN1
 set_io seven_segment_select[1] H1 # AN2
-#set_io seven_segment_select[2] ?? # AN3
+set_io seven_segment_select[2] G1 # AN3
 set_io seven_segment_select[3] G3 # AN4
 
 set_io seven_segment[0] J1 # A
 set_io seven_segment[1] J3 # B
-#set_io seven_segment[2] ?? # C
-#set_io seven_segment[3] ?? # D
-#set_io seven_segment[4] ?? # E
+set_io seven_segment[2] N1 # C
+set_io seven_segment[3] K4 # D
+set_io seven_segment[4] K3 # E
 set_io seven_segment[5] L1 # F
 set_io seven_segment[6] M1 # G
