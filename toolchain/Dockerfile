@@ -5,6 +5,4 @@ RUN apt update -y && apt upgrade -y && apt install -y fpga-icestorm nextpnr-ice4
 RUN mkdir workspace
 WORKDIR workspace
 
-COPY ./compile-and-flash.sh ./main.sh
-
-CMD ["sh", "main.sh"]
+COPY ./compile-and-flash.sh ./
