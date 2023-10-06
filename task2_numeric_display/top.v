@@ -1,3 +1,6 @@
+`include "display.v"
+
+// Step 1: Fix cu.pcf to make seven_segment and seven_segment_select available
 module top (
     input        clk,
     input        rst_n,
@@ -6,28 +9,16 @@ module top (
     output [3:0] seven_segment_select
 );
 
-    localparam CLOCK_SPEED = 100000000;
+    reg   [32:0] count = 0;
 
-    wire [32:0] count;
-    wire counter_clk;
-
-    clock #(CLOCK_SPEED / 20) counter_clk_mod (
-        .clk        (clk),
-        .rst_n      (rst_n),
-        .clk_out    (counter_clk)
-    );
-
-    counter counter_mod (
-        .clk        (counter_clk),
-        .rst_n      (rst_n),
-        .count      (count)
-    );
-
-    display #(CLOCK_SPEED) display_mod (
+    display display_mod(
         .clk                    (clk),
         .rst_n                  (rst_n),
         .value                  (count[15:0]),
         .seven_segment          (seven_segment),
         .seven_segment_select   (seven_segment_select)
     );
+
+    // Step 4: Count, and show it on the display
+
 endmodule
