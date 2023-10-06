@@ -338,6 +338,18 @@ module counter (
 endmodule
 #+END_SRC
 
+** Datatyper
+*** Konstanter
+#+BEGIN_SRC verilog
+module test ();
+
+   wire a = 4'b0101;
+
+   wire b = 8'b11110000;
+
+endmodule
+#+END_SRC
+
 ** Oppgave 1
 *** Oppsett
 - Klon repoet
