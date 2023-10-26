@@ -1,5 +1,7 @@
 indir=$1
-outdir=$indir-out
+outdir=$indir/out
+
+mkdir $outdir
 
 yosys "-p synth_ice40 -top top -json $outdir/top.json" $indir/top.v \
   && nextpnr-ice40 --hx8k --package cb132 --pcf cu.pcf --json $outdir/top.json --asc $outdir/top.asc \

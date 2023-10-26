@@ -5,4 +5,5 @@ RUN apt update -y && apt upgrade -y && apt install -y fpga-icestorm nextpnr-ice4
 RUN mkdir workspace
 WORKDIR workspace
 
+COPY ./main.py ./
 COPY ./compile-and-flash.sh ./
