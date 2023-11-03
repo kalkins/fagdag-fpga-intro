@@ -22,3 +22,6 @@ set_io seven_segment[3] K4
 set_io seven_segment[4] K3
 set_io seven_segment[5] L1
 set_io seven_segment[6] M1
+
+set_io usb_tx M9
+set_io usb_rx P14
